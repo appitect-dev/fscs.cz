@@ -85,9 +85,14 @@ export function Footer() {
         </div>
 
         <div className="mt-10 flex flex-col items-center gap-4 border-t border-white/10 pt-6 sm:flex-row sm:justify-between">
-          <p className="text-sm text-white/60">
-            Copyright © {year} {company.legalName}
-          </p>
+          <div className="text-center sm:text-left">
+            <p className="text-sm text-white/60">
+              Copyright © {year} {company.legalName}
+            </p>
+            <p className="mt-1 text-sm text-white/40">
+              IČ: {company.ic} · DIČ: {company.dic}
+            </p>
+          </div>
           <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
             <Link
               href={PRIVACY_PATH}

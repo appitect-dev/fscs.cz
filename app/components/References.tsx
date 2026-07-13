@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { clients, sectors } from "@/app/lib/site";
 
 export function References() {
@@ -35,14 +36,17 @@ export function References() {
           <p className="text-center text-sm font-semibold uppercase tracking-[0.2em] text-body/60">
             Vybraní klienti
           </p>
-          <div className="mt-6 flex flex-wrap items-center justify-center gap-x-10 gap-y-5">
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-x-10 gap-y-8 sm:gap-x-14">
             {clients.map((client) => (
-              <span
-                key={client}
-                className="text-xl font-bold tracking-wide text-ink/40 transition-colors hover:text-brand"
-              >
-                {client}
-              </span>
+              <Image
+                key={client.name}
+                src={client.logo}
+                alt={client.name}
+                title={client.name}
+                width={client.width}
+                height={client.height}
+                className="h-9 w-auto opacity-70 grayscale transition duration-200 hover:opacity-100 hover:grayscale-0 sm:h-10"
+              />
             ))}
           </div>
         </div>

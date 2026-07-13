@@ -28,12 +28,12 @@ export type ContactPerson = {
 export const people: ContactPerson[] = [
   {
     name: "Ing. Jiří Souček",
-    role: "jednatel · odborně způsobilá osoba",
+    role: "jednatel · odborně způsobilá osoba pro BOZP a PO",
     phone: "+420 603 113 778",
   },
   {
     name: "Bc. Jan Souček",
-    role: "poradenství BOZP a PO · KBOZP · revize",
+    role: "koordinátor BOZP · revize",
     phone: "+420 736 764 991",
   },
 ];
@@ -128,16 +128,22 @@ export const sectors: string[] = [
   "Dřevozpracující průmysl",
 ];
 
-// Vybraní klienti (na základě přímých referencí). Uvádět zkratkou.
-export const clients: string[] = [
-  "TSK",
-  "THMP",
-  "IKEM",
-  "OCNS",
-  "NCBP",
-  "SÚSPK",
-  "OZS",
-  "ÚMO2",
+export type Client = {
+  name: string; // plný název (alt/title)
+  logo: string; // cesta do /public
+  width: number; // vlastní rozměry loga (kvůli poměru stran)
+  height: number;
+};
+
+// Vybraní klienti (na základě přímých referencí). Loga stažena z oficiálních
+// webů; zobrazovat pouze se souhlasem klienta.
+export const clients: Client[] = [
+  { name: "Technická správa komunikací hl. m. Prahy", logo: "/images/clients/tsk.svg", width: 64, height: 64 },
+  { name: "Technologie hlavního města Prahy", logo: "/images/clients/thmp.svg", width: 319, height: 104 },
+  { name: "Institut klinické a experimentální medicíny (IKEM)", logo: "/images/clients/ikem.png", width: 111, height: 97 },
+  { name: "OC Nový Smíchov", logo: "/images/clients/novysmichov.svg", width: 111, height: 35 },
+  { name: "Správa a údržba silnic Plzeňského kraje", logo: "/images/clients/suspk.png", width: 258, height: 60 },
+  { name: "Úřad městského obvodu Plzeň 2", logo: "/images/clients/umo2.png", width: 243, height: 58 },
 ];
 
 export type Faq = { question: string; answer: string };

@@ -15,10 +15,47 @@ type ApiResponse = {
 
 const GENERIC_ERROR = `Odeslání se nezdařilo. Zkuste to prosím znovu, nebo nám napište přímo na ${company.email}.`;
 
-const inputBase =
-  "w-full rounded-btn border bg-white px-4 py-3 text-ink transition-colors placeholder:text-muted focus:border-brand focus:outline-none";
+type Variant = "light" | "dark";
 
-export function ContactForm({ className = "" }: { className?: string }) {
+const theme = {
+  light: {
+    input:
+      "w-full rounded-btn border bg-white px-4 py-3 text-ink transition-colors placeholder:text-muted focus:border-brand focus:outline-none",
+    inputBorder: "border-black/10",
+    label: "mb-1.5 block text-sm font-semibold text-ink",
+    consent: "text-sm leading-relaxed text-body",
+    wrapper: "relative rounded-card border border-black/5 bg-surface p-6 sm:p-8",
+    successWrapper:
+      "rounded-card border border-black/5 bg-surface p-8 text-center",
+    successTitle: "mt-4 text-xl font-bold text-ink",
+    successBody: "mt-2 text-body",
+    errorBox: "mt-4 rounded-btn bg-red-50 px-4 py-3 text-sm text-red-700",
+    fieldError: "mt-1 text-xs text-red-600",
+  },
+  dark: {
+    input:
+      "w-full rounded-btn border bg-white/5 px-4 py-3 text-white transition-colors placeholder:text-white/40 focus:border-brand focus:outline-none",
+    inputBorder: "border-white/15",
+    label: "mb-1.5 block text-sm font-semibold text-white/90",
+    consent: "text-sm leading-relaxed text-white/70",
+    wrapper: "relative rounded-card bg-white/5 p-6 ring-1 ring-white/10 backdrop-blur-sm sm:p-8",
+    successWrapper:
+      "rounded-card bg-white/5 p-8 text-center ring-1 ring-white/10 backdrop-blur-sm",
+    successTitle: "mt-4 text-xl font-bold text-white",
+    successBody: "mt-2 text-white/70",
+    errorBox: "mt-4 rounded-btn bg-red-500/15 px-4 py-3 text-sm text-red-200",
+    fieldError: "mt-1 text-xs text-red-300",
+  },
+} as const;
+
+export function ContactForm({
+  className = "",
+  variant = "light",
+}: {
+  className?: string;
+  variant?: Variant;
+}) {
+  const t = theme[variant];
   const [status, setStatus] = useState<Status>("idle");
   const [message, setMessage] = useState("");
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
@@ -74,15 +111,15 @@ export function ContactForm({ className = "" }: { className?: string }) {
     return (
       <div
         role="status"
-        className={`rounded-card border border-black/5 bg-surface p-8 text-center ${className}`}
+        className={`${t.successWrapper} ${className}`}
       >
         <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-brand/10 text-brand">
           <IconCheck className="h-6 w-6" />
         </span>
-        <h3 className="mt-4 text-xl font-bold text-ink">
+        <h3 className={t.successTitle}>
           Děkujeme, zpráva odešla
         </h3>
-        <p className="mt-2 text-body">Ozveme se vám co nejdříve zpět.</p>
+        <p className={t.successBody}>Ozveme se vám co nejdříve zpět.</p>
         <button
           type="button"
           onClick={() => setStatus("idle")}
@@ -100,7 +137,7 @@ export function ContactForm({ className = "" }: { className?: string }) {
     <form
       onSubmit={handleSubmit}
       noValidate
-      className={`relative rounded-card border border-black/5 bg-surface p-6 sm:p-8 ${className}`}
+      className={`${t.wrapper} ${className}`}
     >
       {/* Honeypot – skryté pole proti spamu (nevyplňují lidé) */}
       <div
@@ -122,7 +159,7 @@ export function ContactForm({ className = "" }: { className?: string }) {
         <div>
           <label
             htmlFor={ids.email}
-            className="mb-1.5 block text-sm font-semibold text-ink"
+            className={t.label}
           >
             E-mail <span className="text-brand">*</span>
           </label>
@@ -134,19 +171,19 @@ export function ContactForm({ className = "" }: { className?: string }) {
             autoComplete="email"
             placeholder="vas@email.cz"
             aria-invalid={Boolean(fieldErrors.email)}
-            className={`${inputBase} ${
-              fieldErrors.email ? "border-red-400" : "border-black/10"
+            className={`${t.input} ${
+              fieldErrors.email ? "border-red-400" : t.inputBorder
             }`}
           />
           {fieldErrors.email && (
-            <p className="mt-1 text-xs text-red-600">{fieldErrors.email}</p>
+            <p className={t.fieldError}>{fieldErrors.email}</p>
           )}
         </div>
 
         <div>
           <label
             htmlFor={ids.company}
-            className="mb-1.5 block text-sm font-semibold text-ink"
+            className={t.label}
           >
             Název firmy <span className="text-brand">*</span>
           </label>
@@ -158,12 +195,12 @@ export function ContactForm({ className = "" }: { className?: string }) {
             autoComplete="organization"
             placeholder="Vaše firma s.r.o."
             aria-invalid={Boolean(fieldErrors.company)}
-            className={`${inputBase} ${
-              fieldErrors.company ? "border-red-400" : "border-black/10"
+            className={`${t.input} ${
+              fieldErrors.company ? "border-red-400" : t.inputBorder
             }`}
           />
           {fieldErrors.company && (
-            <p className="mt-1 text-xs text-red-600">{fieldErrors.company}</p>
+            <p className={t.fieldError}>{fieldErrors.company}</p>
           )}
         </div>
       </div>
@@ -171,7 +208,7 @@ export function ContactForm({ className = "" }: { className?: string }) {
       <div className="mt-5">
         <label
           htmlFor={ids.message}
-          className="mb-1.5 block text-sm font-semibold text-ink"
+          className={t.label}
         >
           Zpráva <span className="text-brand">*</span>
         </label>
@@ -182,12 +219,12 @@ export function ContactForm({ className = "" }: { className?: string }) {
           rows={5}
           placeholder="S čím vám můžeme pomoci?"
           aria-invalid={Boolean(fieldErrors.message)}
-          className={`${inputBase} resize-y ${
-            fieldErrors.message ? "border-red-400" : "border-black/10"
+          className={`${t.input} resize-y ${
+            fieldErrors.message ? "border-red-400" : t.inputBorder
           }`}
         />
         {fieldErrors.message && (
-          <p className="mt-1 text-xs text-red-600">{fieldErrors.message}</p>
+          <p className={t.fieldError}>{fieldErrors.message}</p>
         )}
       </div>
 
@@ -200,7 +237,7 @@ export function ContactForm({ className = "" }: { className?: string }) {
           aria-invalid={Boolean(fieldErrors.consent)}
           className="mt-1 h-4 w-4 shrink-0 accent-brand"
         />
-        <label htmlFor={ids.consent} className="text-sm leading-relaxed text-body">
+        <label htmlFor={ids.consent} className={t.consent}>
           Souhlasím se zpracováním osobních údajů za účelem vyřízení poptávky.
           Více v{" "}
           <a
@@ -213,13 +250,13 @@ export function ContactForm({ className = "" }: { className?: string }) {
         </label>
       </div>
       {fieldErrors.consent && (
-        <p className="mt-1 text-xs text-red-600">{fieldErrors.consent}</p>
+        <p className={t.fieldError}>{fieldErrors.consent}</p>
       )}
 
       {status === "error" && message && (
         <p
           role="alert"
-          className="mt-4 rounded-btn bg-red-50 px-4 py-3 text-sm text-red-700"
+          className={t.errorBox}
         >
           {message}
         </p>

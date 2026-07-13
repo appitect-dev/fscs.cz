@@ -5,7 +5,6 @@ import {
   telHref,
 } from "@/app/lib/site";
 import { IconMail, IconMapPin, IconPhone } from "@/app/components/icons";
-import { ContactForm } from "@/app/components/ContactForm";
 
 function mapsUrl(query: string) {
   return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
@@ -78,11 +77,6 @@ export function Contact() {
               <div className="flex items-center gap-2">
                 <IconMapPin className="h-5 w-5 text-brand" />
                 <h3 className="text-lg font-bold text-ink">{office.label}</h3>
-                {office.primary && (
-                  <span className="rounded-chip bg-brand/10 px-2 py-0.5 text-xs font-semibold uppercase text-brand">
-                    sídlo
-                  </span>
-                )}
               </div>
               <address className="mt-3 not-italic leading-relaxed text-body">
                 {company.legalName}
@@ -102,24 +96,6 @@ export function Contact() {
             </div>
           ))}
         </div>
-
-        {/* Nezávazná poptávka – formulář */}
-        <div id="poptavka" className="mx-auto mt-16 max-w-2xl scroll-mt-28">
-          <div className="text-center">
-            <h3 className="text-2xl font-bold text-ink sm:text-3xl">
-              Napište nám
-            </h3>
-            <p className="mt-3 leading-relaxed text-body">
-              Nezávazná poptávka – vyplňte tři pole a ozveme se vám zpět.
-            </p>
-          </div>
-          <ContactForm className="mt-8" />
-        </div>
-
-        {/* Fakturační údaje */}
-        <p className="mt-16 text-center text-sm text-body/70">
-          {company.legalName} · IČ: {company.ic} · DIČ: {company.dic}
-        </p>
       </div>
     </section>
   );

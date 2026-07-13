@@ -1,6 +1,6 @@
-import { company, people, telHref } from "@/app/lib/site";
-import { Button } from "@/app/components/ui/Button";
-import { IconCheck, IconMail, IconPhone } from "@/app/components/icons";
+import { people, telHref } from "@/app/lib/site";
+import { ContactForm } from "@/app/components/ContactForm";
+import { IconCheck, IconPhone } from "@/app/components/icons";
 
 const benefits = [
   "Nezávazně a zcela zdarma",
@@ -13,7 +13,7 @@ export function AuditCta() {
   const phone = people.find((p) => p.phone)?.phone ?? "";
 
   return (
-    <section id="audit" className="bg-navy">
+    <section id="audit" className="bg-navy scroll-mt-24">
       <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:py-24">
         <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-2 lg:gap-16">
           <div>
@@ -40,39 +40,27 @@ export function AuditCta() {
                 </li>
               ))}
             </ul>
+
+            {phone && (
+              <p className="mt-8 flex items-center gap-1.5 text-sm text-white/60">
+                Raději zavoláte?{" "}
+                <a
+                  href={telHref(phone)}
+                  className="inline-flex items-center gap-1.5 font-semibold text-white hover:text-brand"
+                >
+                  <IconPhone className="h-4 w-4" />
+                  {phone}
+                </a>
+              </p>
+            )}
           </div>
 
-          {/* Kontaktní karta */}
-          <div className="rounded-card bg-white/5 p-8 ring-1 ring-white/10 backdrop-blur-sm">
-            <p className="text-lg font-semibold text-white">
-              Řekněte si o audit
+          {/* Nezávazná poptávka – formulář */}
+          <div id="poptavka" className="scroll-mt-24">
+            <p className="mb-4 text-lg font-semibold text-white">
+              Řekněte si o audit zdarma
             </p>
-            <p className="mt-2 text-sm text-white/60">
-              Zavolejte nebo napište, ozveme se vám zpět.
-            </p>
-
-            <div className="mt-6 flex flex-col gap-3">
-              {phone && (
-                <Button
-                  href={telHref(phone)}
-                  variant="primary"
-                  size="lg"
-                  className="w-full"
-                >
-                  <IconPhone className="h-5 w-5" />
-                  {phone}
-                </Button>
-              )}
-              <Button
-                href={`mailto:${company.email}?subject=Žádost%20o%20audit%20zdarma`}
-                variant="outline"
-                size="lg"
-                className="w-full"
-              >
-                <IconMail className="h-5 w-5" />
-                {company.email}
-              </Button>
-            </div>
+            <ContactForm variant="dark" />
           </div>
         </div>
       </div>
