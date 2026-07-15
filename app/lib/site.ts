@@ -33,7 +33,7 @@ export const people: ContactPerson[] = [
   },
   {
     name: "Bc. Jan Souček",
-    role: "koordinátor BOZP · revize",
+    role: "odborně způsobilá osoba v PO · revize",
     phone: "+420 736 764 991",
   },
 ];
@@ -142,7 +142,7 @@ export const clients: Client[] = [
   { name: "Technologie hlavního města Prahy", logo: "/images/clients/thmp.svg", width: 319, height: 104 },
   { name: "Institut klinické a experimentální medicíny (IKEM)", logo: "/images/clients/ikem.png", width: 111, height: 97 },
   { name: "OC Nový Smíchov", logo: "/images/clients/novysmichov.svg", width: 111, height: 35 },
-  { name: "Správa a údržba silnic Plzeňského kraje", logo: "/images/clients/suspk.png", width: 258, height: 60 },
+  { name: "Správa a údržba silnic Plzeňského kraje", logo: "/images/clients/suspk.svg", width: 150, height: 65 },
   { name: "Úřad městského obvodu Plzeň 2", logo: "/images/clients/umo2.png", width: 243, height: 58 },
 ];
 
