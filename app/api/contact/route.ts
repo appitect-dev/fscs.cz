@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
-import { Resend } from "resend";
+import nodemailer from "nodemailer";
 import { company } from "@/app/lib/site";
 
-// Kontaktní formulář: přijme JSON, ověří vstup a odešle e-mail přes Resend.
-// POST se nikdy necachuje (výchozí chování route handlerů).
+// Kontaktní formulář: přijme JSON, ověří vstup a odešle e-mail přes SMTP
+// (schránka u poskytovatele domény). POST se nikdy necachuje.
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -58,9 +58,11 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: false, errors }, { status: 422 });
   }
 
-  const apiKey = process.env.RESEND_API_KEY;
-  if (!apiKey) {
-    console.error("[contact] Chybí RESEND_API_KEY v prostředí.");
+  const host = process.env.SMTP_HOST;
+  const user = process.env.SMTP_USER;
+  const pass = process.env.SMTP_PASS;
+  if (!host || !user || !pass) {
+    console.error("[contact] Chybí SMTP konfigurace (SMTP_HOST/USER/PASS).");
     return NextResponse.json(
       {
         ok: false,
@@ -70,9 +72,16 @@ export async function POST(request: Request) {
     );
   }
 
-  const resend = new Resend(apiKey);
+  const port = Number(process.env.SMTP_PORT) || 465;
+  // 465 = implicitní TLS (secure), 587/25 = STARTTLS (secure=false).
+  const secure = process.env.SMTP_SECURE
+    ? process.env.SMTP_SECURE === "true"
+    : port === 465;
+
   const to = process.env.CONTACT_TO || company.email;
-  const from = process.env.CONTACT_FROM || "onboarding@resend.dev";
+  // Odesílatel musí odpovídat ověřené schránce (SMTP_USER), jinak server
+  // odeslání odmítne. Volitelně lze přepsat přes CONTACT_FROM.
+  const from = process.env.CONTACT_FROM || `Web fscs.cz <${user}>`;
 
   const text = [
     "Nová poptávka z webu fscs.cz",
@@ -85,23 +94,22 @@ export async function POST(request: Request) {
   ].join("\n");
 
   try {
-    const { error } = await resend.emails.send({
+    const transporter = nodemailer.createTransport({
+      host,
+      port,
+      secure,
+      auth: { user, pass },
+    });
+
+    await transporter.sendMail({
       from,
-      to: [to],
+      to,
       replyTo: email,
       subject: `Poptávka z webu – ${companyName}`,
       text,
     });
-
-    if (error) {
-      console.error("[contact] Resend error:", error);
-      return NextResponse.json(
-        { ok: false, error: "Odeslání se nezdařilo. Zkuste to prosím znovu." },
-        { status: 502 },
-      );
-    }
   } catch (err) {
-    console.error("[contact] Neočekávaná chyba:", err);
+    console.error("[contact] SMTP error:", err);
     return NextResponse.json(
       { ok: false, error: "Odeslání se nezdařilo. Zkuste to prosím znovu." },
       { status: 502 },
