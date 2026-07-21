@@ -92,6 +92,17 @@ export function Footer() {
             <p className="mt-1 text-sm text-white/40">
               IČ: {company.ic} · DIČ: {company.dic}
             </p>
+            <p className="mt-1 text-sm text-white/40">
+              Web vyvinula společnost{" "}
+              <a
+                href="https://appitect.eu"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-medium text-white/60 transition-colors hover:text-brand"
+              >
+                Appitect
+              </a>
+            </p>
           </div>
           <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
             <Link
